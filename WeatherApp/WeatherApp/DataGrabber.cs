@@ -7,8 +7,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
 
 namespace WeatherApp
 {
@@ -37,11 +39,22 @@ namespace WeatherApp
                 throw new ArgumentNullException("ApiKey");
         }
         /// <summary>
-        /// Updates the weather object
+        /// Gets data from the API using the provided API information.
         /// </summary>
-        public void Update()
+        private async Task<JArray> GetJsonData()
         {
-
+            using(HttpClient client = new HttpClient())
+            {
+                JArray arr = new JArray();
+                client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36");
+                var response = await client.GetAsync(_ApiRequest);
+                if (response.IsSuccessStatusCode)
+                {
+                    string result = await response.Content.ReadAsStringAsync();
+                    arr = JArray.Parse(result);
+                }
+                return arr;
+            }
         }
     }
 }
