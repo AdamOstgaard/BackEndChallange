@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace WeatherApp
+﻿namespace WeatherApp
 {
     /// <summary>
     /// Correspomds to the wind object of OpenWeatherMap's JSON response
@@ -49,7 +43,9 @@ namespace WeatherApp
         }
     }
     
-
+    /// <summary>
+    /// Wrapper class for the different api classes
+    /// </summary>
     public class Weather
     {
         public Wind wind { get; private set; }
@@ -61,7 +57,10 @@ namespace WeatherApp
             weatherDesc = wd;
             mainWeather = mw;
         }
-
+        /// <summary>
+        /// converts the containing weather objects int readable strings and concentates them.
+        /// </summary>
+        /// <returns>A readable string consisting of the weather information</returns>
         public override string ToString()
         {
             return weatherDesc.description +"\n"+ mainWeather.ToString() + "\n" + wind.ToString() + "\n";

@@ -3,20 +3,25 @@
  * 
  */
 
-
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
 namespace WeatherApp
 {
+    /// <summary>
+    /// Wrapper class for API client
+    /// </summary>
     class DataGrabber
     {
+        /// <summary>
+        /// The API key used in API requests
+        /// </summary>
         private string _ApiKey;
+        /// <summary>
+        /// City to get weather for
+        /// </summary>
         private string _City;
         private Uri _ApiRequest { get
             {
@@ -61,8 +66,8 @@ namespace WeatherApp
         /// </summary>
         /// <param name="JsonWeather">JObject with the required weather objects</param>
         /// <exception cref="ArgumentNullException">Gets thrown when the json object is null or empty Either the location is invalid or the API request failed</exception>
-        /// <returns></returns>
-        private Weather ParseJArrayToWeather(JObject JsonWeather)
+        /// <returns>returns the weather object parsed</returns>
+        private Weather ParseJObjectToWeather(JObject JsonWeather)
         {
             if (!(JsonWeather == null || JsonWeather.Count == 0))
             {
@@ -80,11 +85,11 @@ namespace WeatherApp
         /// <summary>
         /// gets the current weather 
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Weather object containing the weather information</returns>
         public Weather getWeather()
         {
             JObject j = GetJsonData().Result;
-            return ParseJArrayToWeather(j);
+            return ParseJObjectToWeather(j);
         }
     }
 }
