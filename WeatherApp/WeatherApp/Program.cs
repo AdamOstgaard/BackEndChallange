@@ -9,16 +9,24 @@ namespace WeatherApp
     class Program
     {
         private const string _APIKEY = "b21da8b713fbce72cdc1d0d012875d12";
-        private const string _CITYLISTLOCATION = "Resources\\city.list.json";
         static void Main(string[] args)
         {
-            string input = Console.ReadLine();
-            CityManager c = new CityManager(_CITYLISTLOCATION);
-            //TODO: Add exceptionhandling for when location is not valid and for when city list is non existing.
-            DataGrabber dataGrabber = new DataGrabber(c.GetIdFromName(input), _APIKEY);
-            var t = dataGrabber.getWeather();
-            Console.WriteLine(t.ToString());
-            Console.ReadKey();
+            while(true)
+            {
+                Console.WriteLine("Enter location and press enter");
+                string input = Console.ReadLine();
+                try
+                {
+                    DataGrabber dataGrabber = new DataGrabber(input, _APIKEY);
+                    var t = dataGrabber.getWeather();
+                    Console.WriteLine("Weather for {0}:", input);
+                    Console.WriteLine(t.ToString());
+                }
+                catch (ArgumentNullException)
+                {
+                    Console.WriteLine("The API request failed! Are you sure thats a valid location?");
+                }
+            }
         }
     }
 }

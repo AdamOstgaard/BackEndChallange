@@ -17,22 +17,22 @@ namespace WeatherApp
     class DataGrabber
     {
         private string _ApiKey;
-        private string _CityId;
+        private string _City;
         private Uri _ApiRequest { get
             {
-                return new Uri(string.Format("http://api.openweathermap.org/data/2.5/weather?id={0}&APPID={1}", _CityId, _ApiKey));
+                return new Uri(string.Format("http://api.openweathermap.org/data/2.5/weather?q={0}&APPID={1}", _City, _ApiKey));
             } }
         /// <summary>
         /// Creates a new DataGrabber object containing the 
         /// </summary>
         /// <param name="DataSource">The API command to execute</param>
         /// <exception cref="ArgumentNullException">Gets thrown if a parameter is null</exception>
-        public DataGrabber(string CityId, string ApiKey)
+        public DataGrabber(string City, string ApiKey)
         {
-            if (!string.IsNullOrWhiteSpace(CityId))
-                _CityId = CityId;
+            if (!string.IsNullOrWhiteSpace(City))
+                _City = City;
             else
-                throw new ArgumentNullException("CityId");
+                throw new ArgumentNullException("City");
             if (!string.IsNullOrWhiteSpace(ApiKey))
                 _ApiKey = ApiKey;
             else
@@ -60,13 +60,21 @@ namespace WeatherApp
         /// Converts the weather information to their corresponding objects.
         /// </summary>
         /// <param name="JsonWeather">JObject with the required weather objects</param>
+        /// <exception cref="ArgumentNullException">Gets thrown when the json object is null or empty Either the location is invalid or the API request failed</exception>
         /// <returns></returns>
         private Weather ParseJArrayToWeather(JObject JsonWeather)
         {
-            Wind wind = JsonWeather["wind"].ToObject<Wind>();
-            MainWeather w = JsonWeather["main"].ToObject<MainWeather>();
-            WeatherDesc wd = JsonWeather["weather"][0].ToObject<WeatherDesc>();
-            return new Weather(wind, wd, w);
+            if (!(JsonWeather == null || JsonWeather.Count == 0))
+            {
+                Wind wind = JsonWeather["wind"].ToObject<Wind>();
+                MainWeather w = JsonWeather["main"].ToObject<MainWeather>();
+                WeatherDesc wd = JsonWeather["weather"][0].ToObject<WeatherDesc>();
+                return new Weather(wind, wd, w);
+            }
+            else
+            {
+                throw new ArgumentNullException("JsonWeather");
+            }
         }
 
         /// <summary>
